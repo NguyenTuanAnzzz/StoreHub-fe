@@ -1,14 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Register from './pages/Register';
-
+import { BrowserRouter } from "react-router-dom";
+import AppRoute from './routes/AppRoute';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Register></Register>
+    <BrowserRouter>
+      <AppRoute/>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

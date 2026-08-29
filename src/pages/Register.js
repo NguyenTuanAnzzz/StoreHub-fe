@@ -3,6 +3,7 @@ import InputField from '../components/InputField';
 import { useState } from 'react';
 import ButtonField from '../components/ButtonField';
 import Error from '../components/Error';
+import { useNavigate } from 'react-router-dom';
 
 export default function Register() {
 
@@ -24,6 +25,8 @@ export default function Register() {
     }
 
     const[check, setCheck] = useState(false)
+
+    const navigate = useNavigate();
 
     const handleSubmit = async(e) =>{
         e.preventDefault();
@@ -48,8 +51,7 @@ export default function Register() {
                 setError(data.message)
                 return;
             }
-            alert(data);
-            console.log(data)
+            window.location.href = `/verify-otp?email=${encodeURIComponent(form.email)}`
         }catch(error){
             setError("Không thể kết nối đến server");
        
