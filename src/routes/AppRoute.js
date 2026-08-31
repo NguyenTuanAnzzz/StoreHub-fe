@@ -1,6 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import Register from "../pages/Register";
 import VerifyOtp from "../pages/VerifyOtp";
+import Login from "../pages/Login";
+import Home from "../pages/Home";
+
 
 export default function AppRoute(){
     return (
@@ -8,6 +11,8 @@ export default function AppRoute(){
             {/* <Route path="/" element={<Home />} /> */}
             <Route path="register" element={<Register/>}/>
             <Route path="verify-otp" element={<VerifyOtp/>}/>
+            <Route path="login" element={<Login/>}/>
+            <Route path="/" element={<Home/>}/>
         </Routes>
     )
 }
