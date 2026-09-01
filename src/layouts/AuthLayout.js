@@ -1,6 +1,30 @@
+import { useLocation } from 'react-router-dom';
 
 export default function AuthLayout({children}) {
-   
+    const location = useLocation();
+
+    let mobileTitle = "Đăng nhập / Đăng ký";
+    let desktopTitle = "Trải nghiệm mua sắm công nghệ đỉnh cao.";
+    let desktopDesc = "Tạo tài khoản ngay hôm nay để nhận các ưu đãi độc quyền, tích điểm thành viên và theo dõi đơn hàng của bạn một cách dễ dàng nhất.";
+
+    if (location.pathname === '/login') {
+        mobileTitle = "Chào mừng trở lại";
+        desktopTitle = "Chào mừng bạn quay trở lại.";
+        desktopDesc = "Đăng nhập để xem lịch sử mua hàng, quản lý đơn hàng và nhận những ưu đãi riêng dành cho bạn.";
+    } else if (location.pathname === '/register') {
+        mobileTitle = "Tạo tài khoản ngay";
+        desktopTitle = "Bắt đầu hành trình mua sắm.";
+        desktopDesc = "Tạo tài khoản ngay hôm nay để nhận các ưu đãi độc quyền, tích điểm thành viên và theo dõi đơn hàng của bạn một cách dễ dàng nhất.";
+    } else if (location.pathname.includes('/phone') || location.pathname.includes('/update-phone')) {
+        mobileTitle = "Xác thực số điện thoại";
+        desktopTitle = "Bảo mật tài khoản của bạn.";
+        desktopDesc = "Cung cấp số điện thoại giúp tăng cường bảo mật và giúp chúng tôi giao hàng đến bạn chính xác nhất.";
+    } else if (location.pathname.includes('/verify')) {
+        mobileTitle = "Xác thực OTP";
+        desktopTitle = "Hoàn tất đăng nhập.";
+        desktopDesc = "Vui lòng nhập mã OTP đã được gửi đến số điện thoại hoặc email của bạn để tiếp tục.";
+    }
+
     return (
         /* Vẫn giữ tuyệt đối h-screen & overflow-hidden để không scroll */
         <div className="flex h-screen w-full overflow-hidden bg-paper-white font-inter text-true-black selection:bg-mint-green selection:text-paper-white">
@@ -34,11 +58,11 @@ export default function AuthLayout({children}) {
                     </div>
                     {/* Đổi chữ Title thành màu Trắng */}
                     <h1 className="text-[40px] font-semibold leading-[1.1] tracking-[-1px] text-paper-white xl:text-[48px]">
-                        Trải nghiệm mua sắm công nghệ đỉnh cao.
+                        {desktopTitle}
                     </h1>
                     {/* Đổi chữ mô tả thành màu Xám sáng (mist-gray) */}
                     <p className="mt-5 text-[16px] leading-[1.5] text-mist-gray/80 xl:text-[18px]">
-                        Tạo tài khoản ngay hôm nay để nhận các ưu đãi độc quyền, tích điểm thành viên và theo dõi đơn hàng của bạn một cách dễ dàng nhất.
+                        {desktopDesc}
                     </p>
                 </div>
 
@@ -57,15 +81,10 @@ export default function AuthLayout({children}) {
                     {/* Mobile Header */}
                     <div className="mb-4 text-center lg:hidden">
                         <img src="/logo_ultimate_tech.svg" alt="Ultimate Tech Logo" className="mx-auto mb-2 h-10 w-10 rounded-md shadow-sm" />
-                        <h2 className="text-[24px] font-semibold text-ink-black">Đăng ký thành viên</h2>
+                        <h2 className="text-[24px] font-semibold text-ink-black">{mobileTitle}</h2>
                     </div>
 
-                    {/* Desktop Title */}
-                    <div className="mb-5 hidden lg:block">
-                        <h2 className="text-[26px] font-semibold tracking-[-0.4px] text-ink-black">Tạo tài khoản</h2>
-                        <p className="mt-1 text-[14px] text-true-black/60">Điền thông tin của bạn bên dưới</p>
-                    </div>
-
+                    
                     {children}
                     
                 </div>

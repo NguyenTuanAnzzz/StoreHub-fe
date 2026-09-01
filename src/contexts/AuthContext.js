@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
         sessionStorage.getItem("token")
     );
 
-    const [error, setError] = useState("");
+    const [loginError, setLoginError] = useState("");
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const login = async ({ email, password }, check) => {
@@ -29,61 +29,66 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.message);
+                setLoginError(data.message);
                 return;
             }
 
             if (check) {
                 localStorage.setItem("token", data.token);
+                sessionStorage.removeItem("token")
             } else {
                 sessionStorage.setItem("token", data.token);
+                localStorage.removeItem("token");
             }
 
             setToken(data.token);
             navigate("/");
 
         } catch (error) {
-            setError("Không thể kết nối đến server");
+            setLoginError("Không thể kết nối đến server");
         }
     };
 
     const getMyProfile = async () => {
+        if (!token) {
+            return;
+        }
+
         try {
-            
-
-            const response = await fetch("http://localhost:8080/api/me", {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
+            const response = await fetch(
+                "http://localhost:8080/api/me",
+                {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            });
+            );
 
-            
-
-            const data = await response.json();
-
-            
             if (!response.ok) {
-                setError(data.message);
+                setUser(null);
                 return;
             }
 
-            setUser(data)
+            const data = await response.json();
+            setUser(data);
+            if (!data.phone) {
+                navigate("/update-phone");
+            }
 
         } catch (error) {
-            setError("Không thể kết nối đến server");
+            setUser(null);
         }
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         getMyProfile();
-    },[token])
+    }, [token])
 
 
 
     return (
-        <AuthContext.Provider value={{ token, login, error, user, getMyProfile }}>
+        <AuthContext.Provider value={{ token, setToken, login, loginError, user, getMyProfile }}>
             {children}
         </AuthContext.Provider>
     );

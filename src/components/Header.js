@@ -33,9 +33,20 @@ export default function Header() {
                         <Lineicons icon={Cart1Outlined} size={20} />
                         <span className="absolute -top-1.5 -right-2 bg-mint-green text-paper-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
                     </button>
-                    {token ? user.name :<a href="/login" className="bg-ink-black text-paper-white text-[14px] font-medium py-2.5 px-5 rounded-md shadow-sm hover:bg-mint-green transition-colors hidden sm:block">
-                        Đăng nhập
-                    </a>}
+                    {token ? (
+                        <div className="flex items-center gap-2 cursor-pointer group">
+                            <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm overflow-hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-400 mt-1.5">
+                                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
+                                </svg>
+                            </div>
+                            <span className="font-medium text-[14px] text-ink-black group-hover:text-mint-green transition-colors">{user?.name}</span>
+                        </div>
+                    ) : (
+                        <a href="/login" className="bg-ink-black text-paper-white text-[14px] font-medium py-2.5 px-5 rounded-md shadow-sm hover:bg-mint-green transition-colors hidden sm:block">
+                            Đăng nhập
+                        </a>
+                    )}
 
                     
                 </div>

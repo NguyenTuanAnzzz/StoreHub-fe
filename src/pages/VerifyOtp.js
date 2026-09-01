@@ -12,29 +12,37 @@ export default function VerifyOtp() {
     const email = searchParams.get("email");
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const form = { "email": email, "otp": otp.join("") }
+
+        const form = {
+            email: email,
+            otp: otp.join("")
+        };
 
         try {
-            const response = await fetch("http://localhost:8080/api/auth/verify-otp", {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(form)
-            })
+            const response = await fetch(
+                "http://localhost:8080/api/auth/verify-otp",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(form)
+                }
+            );
+
+            const data = await response.json();
+
             if (!response.ok) {
-                setError(data.message)
-                return;
+                setError(data.message);
+                return; 
             }
 
-            const data = await response.json()
-            navigate('/login')
-        }
-        catch (error) {
+            navigate("/login");
+
+        } catch (error) {
             setError("Không thể kết nối đến server");
         }
-
-    }
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {

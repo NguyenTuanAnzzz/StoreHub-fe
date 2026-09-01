@@ -272,21 +272,28 @@ const Home = () => {
             <section className="w-full bg-ink-black py-20 px-6">
                 <div className="w-full max-w-[800px] mx-auto text-center">
                     <h2 className="text-[32px] font-semibold text-paper-white tracking-[-0.4px] leading-[1.15] mb-4">
-                        Đăng ký nhận thông tin
+                        Đối tác hàng đầu
                     </h2>
                     <p className="text-[16px] text-paper-white/70 mb-8 max-w-[500px] mx-auto">
-                        Nhận ngay mã giảm giá 10% cho đơn hàng đầu tiên và cập nhật sớm nhất các chương trình khuyến mãi.
+                        Tự hào đồng hành cùng các thương hiệu công nghệ lớn nhất thế giới như Apple, Samsung, Sony và nhiều đối tác uy tín khác.
                     </p>
-                    <form className="flex flex-col sm:flex-row gap-3 max-w-[500px] mx-auto">
-                        <input 
-                            type="email" 
-                            placeholder="Địa chỉ email của bạn" 
-                            className="flex-1 bg-paper-white/10 border border-paper-white/20 text-paper-white rounded-md px-4 py-3 outline-none focus:border-mint-green transition-colors placeholder-paper-white/40 text-[14px]"
-                        />
-                        <button type="button" className="bg-mint-green text-paper-white text-[14px] font-medium py-3 px-6 rounded-md hover:bg-[#0a7a50] transition-colors whitespace-nowrap">
-                            Đăng ký ngay
-                        </button>
-                    </form>
+                    <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 max-w-[800px] mx-auto opacity-70">
+                        {[
+                            { name: 'Apple', url: 'https://cdn.simpleicons.org/apple/white' },
+                            { name: 'Samsung', url: 'https://cdn.simpleicons.org/samsung/white' },
+                            { name: 'Sony', url: 'https://cdn.simpleicons.org/sony/white' },
+                            { name: 'Asus', url: 'https://cdn.simpleicons.org/asus/white' },
+                            { name: 'HP', url: 'https://cdn.simpleicons.org/hp/white' },
+                            { name: 'Lenovo', url: 'https://cdn.simpleicons.org/lenovo/white' }
+                        ].map((partner, idx) => (
+                            <img 
+                                key={idx} 
+                                src={partner.url} 
+                                alt={partner.name} 
+                                className="h-12 md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity cursor-pointer" 
+                            />
+                        ))}
+                    </div>
                 </div>
             </section>
 
