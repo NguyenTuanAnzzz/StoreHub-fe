@@ -1,10 +1,14 @@
 import { Cart1Outlined, Search1Outlined } from "@lineiconshq/free-icons";
 import Lineicons from "@lineiconshq/react-lineicons";
 import { useAuth } from "../contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
 
-    const {token, user} = useAuth();
+    const { token, user } = useAuth();
+    const navigate = useNavigate();
+
 
     return (
         <nav className="w-full bg-paper-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-mist-gray transition-all">
@@ -34,11 +38,28 @@ export default function Header() {
                         <span className="absolute -top-1.5 -right-2 bg-mint-green text-paper-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">2</span>
                     </button>
                     {token ? (
-                        <div className="flex items-center gap-2 cursor-pointer group">
+                        <div className="flex items-center gap-2 cursor-pointer group" onClick={() => navigate("/profile")}>
                             <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm overflow-hidden">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-400 mt-1.5">
-                                    <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
-                                </svg>
+                                {user?.avatar ? (
+                                    <img
+                                        src={user.avatar}
+                                        alt="Avatar"
+                                        className="w-full h-full rounded-full object-cover"
+                                    />
+                                ) : (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                        className="w-6 h-6 text-gray-400 mt-1.5"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M7.5 6a4.5 4.5 0 1 1 9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                )}
                             </div>
                             <span className="font-medium text-[14px] text-ink-black group-hover:text-mint-green transition-colors">{user?.name}</span>
                         </div>
@@ -48,7 +69,7 @@ export default function Header() {
                         </a>
                     )}
 
-                    
+
                 </div>
             </div>
         </nav>)

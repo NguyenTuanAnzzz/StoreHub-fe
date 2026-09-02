@@ -15,31 +15,34 @@ const PhoneUpdate = () => {
     }
 
     const navigate = useNavigate();
-    const {token} = useAuth();
-    const handleSubmit = async(e) => {
+    const { token } = useAuth();
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        try{
-            const response = await fetch("http://localhost:8080/api/me/update-phone",{
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"     
-                },
-                body: JSON.stringify({phone})
-            })
+
+        try {
+            const response = await fetch(
+                "http://localhost:8080/api/me/update-phone",
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ phone })
+                }
+            );
 
             const data = await response.json();
-            if(response.ok){
-                navigate("/")
-            }
-            if(!response.ok){
-                setError(data.message || "Có lỗi xảy ra");
+
+
+            if (!response.ok) {
+                setError(data.message);
                 return;
             }
-            // Nếu thành công thì có thể chuyển hướng hoặc thông báo ở đây
-        }catch(error){
-            setError("Không thể kết nối đến server");
+
+            navigate("/");
+        } catch (error) {
+            console.error("FETCH ERROR:", error);
         }
     };
 
@@ -51,12 +54,12 @@ const PhoneUpdate = () => {
             </div>
 
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                <InputField 
-                    label={"Số điện thoại"} 
-                    value={phone} 
-                    name={"phone"} 
-                    placeholder={"0912345678"} 
-                    onChange={handleChange} 
+                <InputField
+                    label={"Số điện thoại"}
+                    value={phone}
+                    name={"phone"}
+                    placeholder={"0912345678"}
+                    onChange={handleChange}
                     type={"tel"}
                 />
 
