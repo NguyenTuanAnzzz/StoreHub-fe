@@ -8,6 +8,10 @@ import PhoneUpdate from "../pages/PhoneUpdate";
 import { useAuth } from "../contexts/AuthContext";
 import Profile from "../pages/Profile";
 import ProfileLayout from "../layouts/ProfileLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import Overview from "../pages/admin/Overview";
+import DashboardRoute from "./DashboardRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 export default function AppRoute() {
     const { token, user } = useAuth();
@@ -27,14 +31,26 @@ export default function AppRoute() {
                     element={<PhoneUpdate />}
                 />
             )}
-            {
-                token && (
-                    <Route path="/profile" element={<ProfileLayout />}>
-                        <Route index element={<Profile />} />
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
 
-                    </Route>
-                )
-            }
+                <Route path="/profile" element={<ProfileLayout />}>
+
+                    <Route index element={<Profile />} />
+
+                </Route>
+
+            </Route>
+
+            <Route element={<DashboardRoute />}>
+                <Route path="/admin" element={<DashboardLayout />}>
+                    <Route path="overview" element={<Overview />} />
+                </Route>
+
+                {/* <Route path="/staff" element={<DashboardLayout />}>
+                    <Route index element={<Dashboard />} />
+                </Route> */}
+            </Route>
 
         </Routes>
     )

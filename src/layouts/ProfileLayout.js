@@ -2,12 +2,16 @@ import {
     ArrowRightOutlined,
     Cart1Outlined,
     CertificateBadge1Outlined,
+    DashboardSquare1Stroke
 } from "@lineiconshq/free-icons";
 import HomeLayout from "./HomeLayout";
 import Lineicons from "@lineiconshq/react-lineicons";
 import { NavLink, Outlet } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function ProfileLayout() {
+
+    const { logout, user } = useAuth();
     return (
         <HomeLayout>
             <div className="bg-mist-gray/20 min-h-[calc(100vh-80px)]">
@@ -72,9 +76,31 @@ export default function ProfileLayout() {
                                     </span>
                                 </NavLink>
 
+                                {(user?.role === "ADMIN" || user?.role === "STAFF") && (<NavLink
+                                    to={user.role === "ADMIN" ? "/admin/overview" : "/staff/overview"}
+                                    end
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-3 px-4 py-3 rounded-[12px] font-medium transition-all cursor-pointer ${isActive
+                                            ? "bg-mint-green/10 text-mint-green"
+                                            : "text-ink-black hover:bg-mist-gray/80"
+                                        }`
+                                    }
+                                >
+                                    <Lineicons
+                                        icon={DashboardSquare1Stroke}
+                                        size={20}
+                                        className="stroke-[1.5px]"
+                                    />
+
+
+                                    <span className="text-[14px]">
+                                        Dashboard
+                                    </span>
+                                </NavLink>)}
+
                                 <div className="w-full h-[1px] bg-mist-gray my-2" />
 
-                                <button
+                                <button onClick={logout}
                                     type="button"
                                     className="flex items-center gap-3 px-4 py-3 text-[#e53e3e] hover:bg-[#e53e3e]/10 rounded-[12px] font-medium cursor-pointer transition-colors text-left"
                                 >

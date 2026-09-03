@@ -26,42 +26,10 @@ const Profile = () => {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-
-        const formData = new FormData();
-
-        formData.append("name", form.name);
-        formData.append("phone", form.phone);
-
-        if (form.avatar instanceof File) {
-            formData.append("avatar", form.avatar);
-        }
-
-        try {
-            const response = await fetch(
-                "http://localhost:8080/api/me/update-profile",
-                {
-                    method: "PUT",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body: formData
-                }
-            );
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                setError(data.message );
-                return;
-            }
-
-   
-
-        } catch (error) {
-            setError("Không thể kết nối đến server");
-        }
+        // Xử lý logic submit API ở đây
+        console.log("Submit form", form);
     };
 
     useEffect(() => {
