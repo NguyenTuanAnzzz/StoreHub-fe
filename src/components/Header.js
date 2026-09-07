@@ -9,14 +9,15 @@ export default function Header() {
     const { token, user } = useAuth();
     const navigate = useNavigate();
 
+    
 
     return (
         <nav className="w-full bg-paper-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-mist-gray transition-all">
             <div className="w-full max-w-[1200px] mx-auto flex justify-between items-center py-4 px-6">
                 {/* Logo */}
                 <div className="flex items-center gap-3 group cursor-pointer">
-                    <img src="/logo_ultimate_tech.svg" alt="Ultimate Tech Logo" className="w-12 h-12 rounded-md shadow-sm-2" />
-                    <span className="font-semibold text-ink-black text-[20px] tracking-[-0.2px]">Ultimate Tech</span>
+                    <img src="/logo.svg" alt="StoreHub Logo" className="w-12 h-12 rounded-md shadow-sm-2" />
+                    <span className="font-semibold text-ink-black text-[20px] tracking-[-0.2px]">StoreHub</span>
                 </div>
 
                 {/* Desktop Menu */}
@@ -44,6 +45,7 @@ export default function Header() {
                                     <img
                                         src={user.avatar}
                                         alt="Avatar"
+                                        referrerPolicy="no-referrer"
                                         className="w-full h-full rounded-full object-cover"
                                     />
                                 ) : (

@@ -25,8 +25,9 @@ export default function DashboardLayout() {
                         </div>
                         <div className="w-10 h-10 rounded-full bg-mist-gray flex items-center justify-center overflow-hidden border border-cloud-gray cursor-pointer">
                             <img
-                                src={user.avatarg}
+                                src={user.avatar}
                                 alt="Admin"
+                                referrerPolicy="no-referrer"
                                 className="w-full h-full object-cover"
                             />
                         </div>

@@ -20,7 +20,7 @@ export default function Sidebar() {
             {/* Logo Area */}
             <div className="h-20 flex items-center px-8 border-b border-paper-white/10">
                 <span className="text-[24px] font-bold text-mint-green tracking-[-0.5px]">
-                    Ultimate<span className="text-paper-white">Admin</span>
+                    StoreHub<span className="text-paper-white">Admin</span>
                 </span>
             </div>
 

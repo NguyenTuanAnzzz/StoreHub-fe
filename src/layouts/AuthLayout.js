@@ -37,7 +37,7 @@ export default function AuthLayout({children}) {
                     {/* Sử dụng ảnh công nghệ trực tiếp từ Unsplash (rất ổn định) */}
                     <img 
                         src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&auto=format&fit=crop" 
-                        alt="Ultimate Tech Workspace" 
+                        alt="StoreHub Workspace" 
                         className="h-full w-full object-cover"
                     />
                     {/* Lớp phủ màu đen (Ink Black) độ trong suốt 80% để chữ trắng nổi bật tuyệt đối */}
@@ -46,9 +46,9 @@ export default function AuthLayout({children}) {
 
                 {/* Logo */}
                 <div className="relative z-10 flex items-center gap-3">
-                    <img src="/logo_ultimate_tech.svg" alt="Ultimate Tech Logo" className="h-12 w-12 rounded-md shadow-sm" />
-                    {/* Đổi chữ logo thành màu Trắng cho nổi trên nền đen */}
-                    <span className="text-[20px] font-semibold tracking-[-0.2px] text-paper-white">Ultimate Tech</span>
+                    <img src="/logo.svg" alt="StoreHub Logo" className="h-12 w-12 rounded-md shadow-sm" />
+                    
+                    <span className="text-[20px] font-semibold tracking-[-0.2px] text-paper-white">StoreHub</span>
                 </div>
 
                 {/* Hero Text */}
@@ -68,7 +68,7 @@ export default function AuthLayout({children}) {
 
                 {/* Footer Left */}
                 <div className="relative z-10 text-[14px] text-mist-gray/50">
-                    © 2026 Ultimate Tech. Bảo mật & an toàn tuyệt đối.
+                    © 2026 StoreHub. Bảo mật & an toàn tuyệt đối.
                 </div>
             </div>
 
@@ -80,7 +80,7 @@ export default function AuthLayout({children}) {
                     
                     {/* Mobile Header */}
                     <div className="mb-4 text-center lg:hidden">
-                        <img src="/logo_ultimate_tech.svg" alt="Ultimate Tech Logo" className="mx-auto mb-2 h-10 w-10 rounded-md shadow-sm" />
+                        <img src="/logo.svg" alt="StoreHub Logo" className="mx-auto mb-2 h-10 w-10 rounded-md shadow-sm" />
                         <h2 className="text-[24px] font-semibold text-ink-black">{mobileTitle}</h2>
                     </div>
 

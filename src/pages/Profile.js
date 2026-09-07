@@ -12,7 +12,7 @@ const Profile = () => {
         avatar: ""
     });
 
-    const { user, token } = useAuth();
+    const { user, token, getMyProfile } = useAuth();
     const [error, setError] = useState("");
 
     const fileInputRef = useRef(null);
@@ -26,10 +26,32 @@ const Profile = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Xử lý logic submit API ở đây
-        console.log("Submit form", form);
+        try {
+            const formData = new FormData();
+            formData.append("name", form.name);
+            formData.append("phone", form.phone);
+
+            if (form.avatar instanceof File) {
+                formData.append("avatar", form.avatar);
+            }
+            const response = await fetch("http://localhost:8080/api/me/update-profile", {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            })
+            const data = await response.json();
+            if (!response.ok) {
+                setError(data.message)
+                return;
+            }
+            await getMyProfile()
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     useEffect(() => {
@@ -63,6 +85,7 @@ const Profile = () => {
                                 <img
                                     src={form.avatar instanceof File ? URL.createObjectURL(form.avatar) : form.avatar}
                                     alt="Avatar"
+                                    referrerPolicy="no-referrer"
                                     className="w-full h-full object-cover rounded-full"
                                 />
                             ) : (

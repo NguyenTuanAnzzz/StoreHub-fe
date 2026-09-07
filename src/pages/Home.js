@@ -245,7 +245,7 @@ const Home = () => {
                             Công nghệ dành cho người dẫn đầu
                         </h2>
                         <p className="text-[16px] text-true-black leading-[1.6] mb-6">
-                            Tại Ultimate Tech, chúng tôi không chỉ bán thiết bị điện tử. Chúng tôi cung cấp những công cụ tinh hoa giúp bạn làm việc hiệu quả hơn, sáng tạo tốt hơn và kết nối dễ dàng hơn.
+                            Tại StoreHub, chúng tôi không chỉ bán thiết bị điện tử. Chúng tôi cung cấp những công cụ tinh hoa giúp bạn làm việc hiệu quả hơn, sáng tạo tốt hơn và kết nối dễ dàng hơn.
                         </p>
                         <p className="text-[16px] text-true-black leading-[1.6] mb-8">
                             Với hệ thống cửa hàng trên toàn quốc và dịch vụ chăm sóc khách hàng chuyên nghiệp chuẩn quốc tế, trải nghiệm mua sắm của bạn sẽ luôn được đảm bảo ở mức cao nhất.

@@ -9,8 +9,8 @@ export default function Footer() {
                     {/* Brand */}
                     <div>
                         <div className="flex items-center gap-2 mb-6">
-                            <img src="/logo_ultimate_tech.svg" alt="Ultimate Tech Logo" className="w-8 h-8 rounded-md" />
-                            <span className="font-semibold text-ink-black text-[20px]">Ultimate Tech</span>
+                            <img src="/logo.svg" alt="StoreHub Logo" className="w-8 h-8 rounded-md" />
+                            <span className="font-semibold text-ink-black text-[20px]">StoreHub</span>
                         </div>
                         <p className="text-[14px] text-true-black/70 mb-6 leading-[1.6]">
                             Hệ thống bán lẻ sản phẩm công nghệ cao cấp hàng đầu Việt Nam. Nơi hội tụ những công nghệ mới nhất.
@@ -58,7 +58,7 @@ export default function Footer() {
                             </div>
                             <div className="flex items-start gap-3">
                                 <div className="text-mint-green"><Lineicons icon={Envelope1Outlined} size={20} /></div>
-                                <span className="text-[14px] text-true-black/80">support@ultimatetech.com</span>
+                                <span className="text-[14px] text-true-black/80">support@storehub.com</span>
                             </div>
                         </div>
                     </div>
@@ -66,7 +66,7 @@ export default function Footer() {
 
                 <div className="flex flex-col md:flex-row justify-between items-center border-t border-mist-gray pt-8">
                     <p className="text-[13px] text-true-black/50 mb-4 md:mb-0">
-                        © 2026 Ultimate Tech. All rights reserved.
+                        © 2026 StoreHub. All rights reserved.
                     </p>
                     <div className="flex gap-4">
                         {/* Fake Payment Icons */}

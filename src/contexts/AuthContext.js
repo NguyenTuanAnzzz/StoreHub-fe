@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
     const [loginError, setLoginError] = useState("");
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const login = async ({ email, password }, check) => {
         try {
             const response = await fetch(
@@ -51,8 +52,10 @@ export const AuthProvider = ({ children }) => {
 
     const getMyProfile = async () => {
         if (!token) {
+            setLoading(false);
             return;
         }
+
 
         try {
             const response = await fetch(
@@ -78,6 +81,8 @@ export const AuthProvider = ({ children }) => {
 
         } catch (error) {
             setUser(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -98,7 +103,7 @@ export const AuthProvider = ({ children }) => {
 
 
     return (
-        <AuthContext.Provider value={{ token, setToken, login, loginError, user, getMyProfile, logout }}>
+        <AuthContext.Provider value={{ token, setToken, login, loginError, user, getMyProfile, logout, loading }}>
             {children}
         </AuthContext.Provider>
     );
