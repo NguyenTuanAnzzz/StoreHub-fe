@@ -1,46 +1,88 @@
 import { PlusOutlined, Search1Outlined, Pencil1Outlined, Trash3Outlined } from "@lineiconshq/free-icons";
 import Lineicons from "@lineiconshq/react-lineicons";
 import { useNavigate } from "react-router-dom";
-
+import ButtonField from "../../components/ButtonField";
+import InputField from "../../components/InputField";
+import SelectField from "../../components/SelectField";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import Pagination from "../../components/Pagination";
 export default function Shops() {
 
     const navigate = useNavigate();
-    // Dữ liệu mẫu dựa trên Shop entity (id, name, phone, address, region, status, images, createdAt, vv.)
-    const mockShops = [
-        {
-            id: 1,
-            name: "StoreHub Hà Nội",
-            description: "Cửa hàng trung tâm khu vực miền Bắc",
-            phone: "0901234567",
-            address: "123 Cầu Giấy, Phường Quan Hoa, Quận Cầu Giấy, Hà Nội",
-            region: "Miền Bắc",
-            status: "ACTIVE",
-            images: [{ id: 1, url: "https://placehold.co/100x100" }],
-            createdAt: "2026-09-01T10:00:00"
-        },
-        {
-            id: 2,
-            name: "StoreHub Hồ Chí Minh",
-            description: "Chi nhánh chính khu vực phía Nam",
-            phone: "0912345678",
-            address: "456 Nguyễn Thị Minh Khai, Quận 3, TP.HCM",
-            region: "Miền Nam",
-            status: "ACTIVE",
-            images: [{ id: 2, url: "https://placehold.co/100x100" }],
-            createdAt: "2026-09-02T11:30:00"
-        },
-        {
-            id: 3,
-            name: "StoreHub Đà Nẵng",
-            description: "Chi nhánh đang tạm đóng để nâng cấp",
-            phone: "0923456789",
-            address: "789 Nguyễn Văn Linh, Quận Hải Châu, Đà Nẵng",
-            region: "Miền Trung",
-            status: "INACTIVE",
-            images: [],
-            createdAt: "2026-09-03T09:15:00"
+    const [shops, setShops] = useState([])
+    const { token } = useAuth();
+    const [error, setError] = useState("")
+    const [totalPages, setTotalPages] = useState(0)
+    const [currentPage, setCurrentPage] = useState(0)
+    const [size, setSize] = useState(10)
+
+    const [filter, setFilter] = useState({
+        keyword: "",
+        region: "",
+        status: ""
+    });
+    const handleChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const handleChangeFilter = (e) => {
+        setFilter({
+            ...filter,
+            [e.target.name]: e.target.value
+        });
+        setCurrentPage(0)
+    };
+    const getAllData = async () => {
+        try {
+
+            const params = new URLSearchParams();
+
+            if (filter.keyword) {
+                params.append("keyword", filter.keyword);
+            }
+
+            if (filter.region) {
+                params.append("region", filter.region);
+            }
+
+            if (filter.status) {
+                params.append("status", filter.status);
+            }
+
+            params.append("page", currentPage);
+            params.append("size", size);
+
+            const query = params.toString()
+
+
+            const response = await fetch(
+                `http://localhost:8080/api/shops?${query}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            const data = await response.json();
+            if (!response.ok) {
+                setError(data.message);
+                return
+            }
+            setShops(data.content);
+            setCurrentPage(data.page.number)
+            setTotalPages(data.page.totalPages)
+
+        } catch (error) {
+            setError(error.message)
         }
-    ];
+
+    }
+
+
+    useEffect(() => {
+        getAllData()
+    }, [filter, currentPage])
+
 
     const formatStatus = (status) => {
         if (status === "ACTIVE") {
@@ -59,31 +101,63 @@ export default function Shops() {
                         Quản lý danh sách cửa hàng, thông tin liên hệ và trạng thái hoạt động.
                     </p>
                 </div>
-                <button onClick={() => navigate("/admin/create-shop")} className="flex items-center gap-2 bg-mint-green text-paper-white px-5 py-2.5 rounded-[12px] font-medium hover:bg-[#0a7a50] transition-colors">
-                    <Lineicons icon={PlusOutlined} size={18} />
-                    <span>Thêm cửa hàng</span>
-                </button>
+                <div className="w-[180px]">
+                    <ButtonField
+                        type="button"
+                        bgColor="bg-mint-green"
+                        textColor="text-paper-white"
+                        hoverColor="hover:bg-[#0a7a50]"
+                        onClick={() => navigate("/admin/create-shop")}
+                    >
+                        <div className="flex items-center gap-2">
+                            <Lineicons icon={PlusOutlined} size={18} />
+                            <span>Thêm cửa hàng</span>
+                        </div>
+                    </ButtonField>
+                </div>
             </div>
 
             {/* Filter & Search */}
-            <div className="bg-paper-white p-5 rounded-[16px] shadow-sm border border-mist-gray flex flex-col md:flex-row gap-4 justify-between">
-                <div className="relative w-full md:w-[350px]">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-true-black/40">
-                        <Lineicons icon={Search1Outlined} size={18} />
-                    </div>
-                    <input
-                        type="text"
+            <div className="bg-paper-white p-5 rounded-[16px] shadow-sm border border-mist-gray flex flex-col lg:flex-row gap-6 justify-between items-start lg:items-end">
+                <div className="w-full lg:w-[350px]">
+                    <InputField
+                        label="Tìm kiếm"
+                        name="keyword"
                         placeholder="Tìm kiếm theo tên hoặc SĐT..."
-                        className="w-full pl-10 pr-4 py-2.5 bg-mist-gray/30 border border-mist-gray rounded-[10px] text-[14px] focus:outline-none focus:border-mint-green transition-colors"
+                        onChange={handleChangeFilter}
                     />
                 </div>
-                <div className="flex gap-3 w-full md:w-auto">
-                    <select className="w-full md:w-[180px] px-4 py-2.5 bg-mist-gray/30 border border-mist-gray rounded-[10px] text-[14px] focus:outline-none focus:border-mint-green cursor-pointer">
-                        <option value="">Tất cả khu vực</option>
-                        <option value="Miền Bắc">Miền Bắc</option>
-                        <option value="Miền Trung">Miền Trung</option>
-                        <option value="Miền Nam">Miền Nam</option>
-                    </select>
+                <div className="flex flex-col md:flex-row gap-4 w-full lg:w-auto md:items-end">
+                    {/* Khu vực */}
+                    <div className="w-full md:w-[180px]">
+                        <SelectField
+                            label="Khu vực"
+                            name="region"
+                            choose={[
+                                { value: "", label: "Tất cả khu vực" },
+                                { value: "NORTH", label: "Miền Bắc" },
+                                { value: "CENTRAL", label: "Miền Trung" },
+                                { value: "SOUTH", label: "Miền Nam" }
+                            ]}
+                            onChange={handleChangeFilter}
+                        />
+                    </div>
+
+                    {/* Trạng thái */}
+                    <div className="w-full md:w-[180px]">
+                        <SelectField
+                            label="Trạng thái"
+                            name="status"
+                            choose={[
+                                { value: "", label: "Tất cả trạng thái" },
+                                { value: "ACTIVE", label: "Đang hoạt động" },
+                                { value: "SUSPENDED", label: "Đình chỉ" },
+                                { value: "INACTIVE", label: "Ngừng hoạt động" }
+                            ]}
+                            onChange={handleChangeFilter}
+                        />
+                    </div>
+
                 </div>
             </div>
 
@@ -102,7 +176,7 @@ export default function Shops() {
                             </tr>
                         </thead>
                         <tbody>
-                            {mockShops.map((shop) => (
+                            {shops.map((shop) => (
                                 <tr
                                     key={shop.id}
                                     className="border-b border-mist-gray/50 hover:bg-mist-gray/10 transition-colors text-[14px] text-ink-black"
@@ -112,11 +186,10 @@ export default function Shops() {
                                         <div className="flex items-center gap-3">
                                             {/* Hiển thị ảnh đầu tiên nếu có, nếu không có ảnh thì hiển thị placeholder */}
                                             <div className="w-10 h-10 rounded-lg overflow-hidden bg-mist-gray/50 flex-shrink-0">
-                                                {shop.images && shop.images.length > 0 ? (
-                                                    <img src={shop.images[0].url} alt={shop.name} className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-true-black/30 font-bold text-xs">NO IMG</div>
-                                                )}
+
+                                                <img src={shop.avatar?.[0]} alt={shop.name} className="w-full h-full object-cover" />
+
+
                                             </div>
                                             <div>
                                                 <div className="font-semibold">{shop.name}</div>
@@ -137,6 +210,7 @@ export default function Shops() {
                                             <button
                                                 className="w-8 h-8 flex items-center justify-center rounded-md bg-mist-gray/30 text-ink-black hover:text-mint-green hover:bg-mint-green/10 transition-colors"
                                                 title="Sửa"
+                                                onClick={() => navigate(`/admin/shops/${shop.id}`)}
                                             >
                                                 <Lineicons icon={Pencil1Outlined} size={16} />
                                             </button>
@@ -155,13 +229,7 @@ export default function Shops() {
                 </div>
 
                 {/* Pagination (Tĩnh) */}
-                <div className="px-6 py-4 border-t border-mist-gray flex items-center justify-between">
-                    <span className="text-[13px] text-true-black/60">Hiển thị 1-3 trong số 3 cửa hàng</span>
-                    <div className="flex gap-1">
-                        <button className="px-3 py-1.5 text-[13px] border border-mist-gray rounded-md hover:bg-mist-gray/50 disabled:opacity-50" disabled>Trước</button>
-                        <button className="px-3 py-1.5 text-[13px] border border-mist-gray rounded-md hover:bg-mist-gray/50 disabled:opacity-50" disabled>Sau</button>
-                    </div>
-                </div>
+                <Pagination totalPages={totalPages} currentPage={currentPage} handleChange={handleChange} />
             </div>
         </div>
     );

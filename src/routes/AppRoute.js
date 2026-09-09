@@ -14,6 +14,7 @@ import DashboardRoute from "./DashboardRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import Shops from "../pages/admin/Shops";
 import CreateShop from "../pages/admin/CreateShop";
+import ShopDetail from "../pages/admin/ShopDetail";
 
 export default function AppRoute() {
     const { token, user } = useAuth();
@@ -49,6 +50,7 @@ export default function AppRoute() {
                     <Route path="overview" element={<Overview />} />
                     <Route path='shops' element={<Shops />} />
                     <Route path="create-shop" element={<CreateShop />} />
+                    <Route path="shops/:id" element={<ShopDetail />} />
                 </Route>
 
                 {/* <Route path="/staff" element={<DashboardLayout />}>
