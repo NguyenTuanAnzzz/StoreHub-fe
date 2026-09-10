@@ -1,11 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ButtonField from "../../components/ButtonField";
 import InputField from "../../components/InputField";
 import SelectField from "../../components/SelectField";
 import TextareaField from "../../components/TextareaField";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-
+import Viewer from "viewerjs";
 export default function ShopDetail() {
 
     const { token } = useAuth();
@@ -18,15 +18,24 @@ export default function ShopDetail() {
         region: "",
         status: "",
         description: "",
-        avatar: [],
+        images: [],
         createAt: "",
         updateAt: ""
     })
+    const [previewImages, setPreviewImages] = useState([])
+    const [newImages, setNewImages] = useState([]);
+    const [oldImages, setOldImages] = useState([]);
+    const [toast, setToast] = useState({ visible: false, message: "", type: "success" });
+
+    const showToast = (message, type = "success") => {
+        setToast({ visible: true, message, type });
+    };
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     const getDetailData = async () => {
 
         try {
-            const response = await fetch(`http://localhost:8080/api/shops/${id}`, {
+            const response = await fetch(`http://localhost:8080/api/shops/detail/${id}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -40,13 +49,117 @@ export default function ShopDetail() {
                 return
             }
             setShop(data);
+            setPreviewImages(data.images);
+            setOldImages(data.images);
         } catch (error) {
             setError(error.messae);
         }
+
     }
+
+    const handleChange = (e) => {
+        const { name, value, files } = e.target
+        if (name === "images") {
+            const images = Array.from(files)
+            setNewImages(prev => [
+                ...prev,
+                ...images
+            ]);
+            const newPreviews = images.map((file) => URL.createObjectURL(file))
+            setPreviewImages((prev) => [
+                ...prev,
+                ...newPreviews
+            ]);
+        }
+        setShop({ ...shop, [e.target.name]: e.target.value })
+    }
+
+    const handleRemove = (index) => {
+        if (index < oldImages.length) {
+            setOldImages(prev =>
+                prev.filter((_, i) => i !== index)
+            );
+        } else {
+            const newIndex = index - oldImages.length;
+
+            setNewImages(prev =>
+                prev.filter((_, i) => i !== newIndex)
+            );
+        }
+
+        setPreviewImages(prev =>
+            prev.filter((_, i) => i !== index)
+        );
+    };
+
+    const viewerRef = useRef(null);
+    const viewerInstance = useRef(null);
+
     useEffect(() => {
-        getDetailData()
-    }, [shop])
+        getDetailData();
+    }, [id, token]);
+
+    useEffect(() => {
+        if (!viewerRef.current || previewImages.length === 0) return;
+
+        viewerInstance.current = new Viewer(viewerRef.current, {
+            navbar: true,
+            toolbar: true,
+            title: true,
+            tooltip: true,
+            movable: true,
+            zoomable: true,
+            rotatable: true,
+            scalable: true,
+            transition: true,
+            fullscreen: true,
+        });
+
+        return () => {
+            viewerInstance.current?.destroy();
+            viewerInstance.current = null;
+        };
+    }, [previewImages]);
+
+
+
+    const handleSubmit = async () => {
+        try {
+            const formData = new FormData();
+            formData.append("name", shop.name);
+            formData.append("phone", shop.phone);
+            formData.append("region", shop.region);
+            formData.append("status", shop.status);
+            formData.append("address", shop.address);
+            formData.append("description", shop.description);
+            // Ảnh cũ muốn giữ lại
+            oldImages.forEach((image) => {
+                formData.append("oldImages", image);
+            });
+            // Ảnh mới
+            newImages.forEach((image) => {
+                formData.append("images", image);
+            });
+            const response = await fetch(`http://localhost:8080/api/shops/update/${id}`, {
+                method: "PUT",
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                body: formData
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                showToast(data.message || "Đã xảy ra lỗi khi tạo cửa hàng.", "error");
+                return;
+            }
+
+            showToast("Tạo cửa hàng thành công!", "success");
+            navigate("/admin/shops")
+        } catch (error) {
+            showToast(error.message, "error");
+        }
+    };
     return (
         <div className="flex flex-col gap-6">
             {/* Header Section */}
@@ -65,6 +178,7 @@ export default function ShopDetail() {
                             type="button"
                             bgColor="bg-paper-white"
                             textColor="text-ink-black"
+                            onClick={() => navigate("/admin/shops")}
                             borderColor="border-mist-gray"
                             hoverColor="hover:bg-mist-gray/30"
                         >
@@ -76,6 +190,7 @@ export default function ShopDetail() {
                             type="button"
                             bgColor="bg-mint-green"
                             textColor="text-paper-white"
+                            onClick={handleSubmit}
                             hoverColor="hover:bg-[#0a7a50]"
                             borderColor="border-mint-green"
                         >
@@ -101,6 +216,7 @@ export default function ShopDetail() {
                         name="name"
                         required
                         value={shop.name}
+                        onChange={handleChange}
                     />
 
                     <InputField
@@ -110,6 +226,7 @@ export default function ShopDetail() {
                         placeholder="VD: 0912345678"
                         required
                         value={shop.phone}
+                        onChange={handleChange}
                     />
 
                     <SelectField
@@ -123,6 +240,7 @@ export default function ShopDetail() {
                             { value: "SOUTH", label: "Miền Nam" }
                         ]}
                         value={shop.region}
+                        onChange={handleChange}
                     />
 
                     <SelectField
@@ -132,10 +250,9 @@ export default function ShopDetail() {
                         choose={[
                             { value: "", label: "Chọn trạng thái..." },
                             { value: "ACTIVE", label: "Đang hoạt động" },
-                            { value: "SUSPENDED", label: "Tạm ngưng" },
-                            { value: "INACTIVE", label: "Ngừng hoạt động" }
-                        ]}
+                            { value: "SUSPENDED", label: "Tạm ngưng" },]}
                         value={shop.status}
+                        onChange={handleChange}
                     />
 
                     <div className="md:col-span-2">
@@ -145,6 +262,7 @@ export default function ShopDetail() {
                             placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố..."
                             required
                             value={shop.address}
+                            onChange={handleChange}
                         />
                     </div>
 
@@ -154,6 +272,7 @@ export default function ShopDetail() {
                             name="description"
                             placeholder="Nhập ghi chú hoặc mô tả về cửa hàng (không bắt buộc)..."
                             value={shop.description}
+                            onChange={handleChange}
                         />
                     </div>
                 </div>
@@ -173,6 +292,7 @@ export default function ShopDetail() {
                         multiple
                         className="hidden"
                         id="shop-images"
+                        onChange={handleChange}
                     />
 
                     <label
@@ -193,8 +313,63 @@ export default function ShopDetail() {
                             </p>
                         </div>
                     </label>
+                    {previewImages.length > 0 && (
+                        <div
+                            ref={viewerRef}
+                            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 mt-2"
+                        >
+                            {previewImages.map((src, index) => (
+                                <div
+                                    key={index}
+                                    className="relative aspect-square overflow-hidden rounded-[12px] border border-mist-gray shadow-sm group bg-mist-gray/10"
+                                >
+                                    <img
+                                        src={src}
+                                        alt={`Preview ${index + 1}`}
+                                        className="w-full h-full object-cover cursor-pointer transition-transform duration-500 group-hover:scale-105"
+                                        onClick={() => {
+                                            viewerInstance.current?.view(index);
+                                        }}
+                                    />
+
+                                    {/* Overlay */}
+                                    <div
+                                        className="
+                        absolute inset-0
+                        bg-black/40
+                        opacity-0
+                        group-hover:opacity-100
+                        transition-opacity duration-300
+                        pointer-events-none
+                    "
+                                    >
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                handleRemove(index);
+                                            }}
+                                            className="
+                            pointer-events-auto
+                            absolute top-2 right-2
+                            w-8 h-8
+                            rounded-full
+                            bg-red-500/90
+                            text-white
+                            flex items-center justify-center
+                        "
+                                        >
+                                            X
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
+
     );
 }

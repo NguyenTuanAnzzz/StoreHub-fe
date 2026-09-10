@@ -1,4 +1,4 @@
-import { PlusOutlined, Search1Outlined, Pencil1Outlined, Trash3Outlined } from "@lineiconshq/free-icons";
+import { PlusOutlined, Search1Outlined, Pencil1Outlined } from "@lineiconshq/free-icons";
 import Lineicons from "@lineiconshq/react-lineicons";
 import { useNavigate } from "react-router-dom";
 import ButtonField from "../../components/ButtonField";
@@ -187,7 +187,7 @@ export default function Shops() {
                                             {/* Hiển thị ảnh đầu tiên nếu có, nếu không có ảnh thì hiển thị placeholder */}
                                             <div className="w-10 h-10 rounded-lg overflow-hidden bg-mist-gray/50 flex-shrink-0">
 
-                                                <img src={shop.avatar?.[0]} alt={shop.name} className="w-full h-full object-cover" />
+                                                <img src={shop.images?.[0]} alt={shop.name} className="w-full h-full object-cover" />
 
 
                                             </div>
@@ -213,12 +213,6 @@ export default function Shops() {
                                                 onClick={() => navigate(`/admin/shops/${shop.id}`)}
                                             >
                                                 <Lineicons icon={Pencil1Outlined} size={16} />
-                                            </button>
-                                            <button
-                                                className="w-8 h-8 flex items-center justify-center rounded-md bg-mist-gray/30 text-ink-black hover:text-[#e53e3e] hover:bg-[#e53e3e]/10 transition-colors"
-                                                title="Xóa"
-                                            >
-                                                <Lineicons icon={Trash3Outlined} size={16} />
                                             </button>
                                         </div>
                                     </td>
